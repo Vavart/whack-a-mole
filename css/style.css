@@ -1,0 +1,117 @@
+body {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(45deg, rgb(56, 120, 78),rgb(175, 255, 102));
+    background-repeat: no-repeat;
+}
+
+::selection {
+    background: green;
+    color: #fff;
+}
+
+h1 {
+    font-size: 55px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+p {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.bestScore {
+
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 10px;
+
+}
+.score {
+    font-weight: 900;
+    font-size: 30px;
+    margin-top: 15px;
+}
+
+.controls {
+    width: 500px;
+    height: 50px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls button:nth-of-type(1) {
+    margin-right: 10px; 
+}
+
+.controls button {
+    width: 200px;
+    height: 35px;  
+    border: none;  
+    outline: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    background: #f7f7f7;
+    cursor: pointer;
+    color: #333;
+}
+
+.controls button:hover {
+    background: #ccc;
+}
+
+.controls button:active {
+    background: hsl(0, 0%, 60%);
+}
+
+
+.grille {
+    display: grid;
+    width: 600px;
+    height: 450px;
+    grid-template: repeat(3, 150px) / repeat(4, 150px);
+    margin: 50px auto 50px;
+    border-collapse:collapse;
+}    
+
+/* COINS ARRONDIS */
+
+.parcelle:nth-of-type(1) {
+    border-top-left-radius: 15px;
+}
+.parcelle:nth-of-type(4) {
+    border-top-right-radius: 15px;
+}
+.parcelle:nth-of-type(9) {
+    border-bottom-left-radius: 15px;
+}
+.parcelle:nth-of-type(12) {
+    border-bottom-right-radius: 15px;
+}
+
+.parcelle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background-image: url("../ressources/dirt.svg");
+    background-size: cover;
+    background-position: center;
+    border: 1px solid hsl(43, 41%, 31%);
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}    
+
+.parcelle img {
+    height: 130px;
+    transform: translateY(150px);
+}
+
