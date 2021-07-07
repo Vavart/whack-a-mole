@@ -8,9 +8,9 @@ const resetBtn = document.querySelector(".reset");
 const playBtn = document.querySelector(".play");
 let isPlaying = false;
 
-const timeDifficulty = [650, 400, 200];
+const timeDifficulty = [650, 500, 350];
 let difficulty = 1;
-let timeToKill = timeDifficulty[difficulty -1];
+let respawnTime = timeDifficulty[difficulty -1];
 
 let intervApparition;
 let timeoutKill;
@@ -39,18 +39,25 @@ function randomParcelle () {
 function randomApparition () {
 
 
-    // Une taupe qui apparaît toutes les "timeToKill" : Défini 
+    // Une taupe qui apparaît toutes les "respawnTime" : Défini 
     intervApparition = setInterval(() => {
+
+        console.log(respawnTime);
 
         // Augmentation de la difficulté en fonction du score
         if (score >= 10 && score < 20) {
             difficulty = 2;
-            timeToKill = timeDifficulty[difficulty -1]; 
+            respawnTime = timeDifficulty[difficulty -1]; 
+
+            clearInterval(intervApparition);
+            randomApparition ();
         }
 
         if (score >= 20) {
             difficulty = 3;
-            timeToKill = timeDifficulty[difficulty -1];
+            respawnTime = timeDifficulty[difficulty -1];
+            clearInterval(intervApparition);
+            randomApparition ();
         }
         
         let index = randomParcelle ();
@@ -114,7 +121,7 @@ function randomApparition () {
 
         }, 2000);
 
-    }, timeToKill);
+    }, respawnTime);
 
 }
 
