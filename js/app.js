@@ -4,30 +4,39 @@ const affScore = document.querySelector(".score");
 const affBestScore = document.querySelector(".bestScore");
 let meilleurScore = 0;
 let score = 0;
+const para = document.querySelector("body p:nth-of-type(1)");
 const resetBtn = document.querySelector(".reset");
 const playBtn = document.querySelector(".play");
 let isPlaying = false;
+let isLoose = false;
 
-const timeDifficulty = [650, 500, 350];
+const timeDifficulty = [400, 300, 200, 100, 65];
 let difficulty = 1;
 let respawnTime = timeDifficulty[difficulty -1];
 
 let intervApparition;
 let timeoutKill;
 
-// Animation si perte d'un point (une taupe qui rentre)
-const animPointEnMoins = gsap.to (affScore, {
+function isFull () {
 
-    paused: true,
-    
-    keyframes : [
-        {duration: 0.1, x: -4},
-        {duration: 0.1, x: 4},
-        {duration: 0.1, x: -4},
-        {duration: 0.1, x: 0},
-    ]
-})
+    tabCheck = [];
 
+    for (let i = 0; i < allParcelles.length; i++) {
+        if (allParcelles[i].childNodes[1].getAttribute("data-visible") === "true") {
+         tabCheck.push(allParcelles[i]);
+        }       
+    }
+
+    console.log(tabCheck);
+
+    if (tabCheck.length === allParcelles.length) {
+
+        isLoose = true;
+        return isLoose;
+    }
+
+    return isLoose;
+}
 
 // Fonction qui renvoie une parcelle aléatoire
 function randomParcelle () {
@@ -42,7 +51,11 @@ function randomApparition () {
     // Une taupe qui apparaît toutes les "respawnTime" : Défini 
     intervApparition = setInterval(() => {
 
-        console.log(respawnTime);
+        if (isFull()) {
+
+            endGame ();
+            return;
+        }
 
         // Augmentation de la difficulté en fonction du score
         if (score >= 10 && score < 20) {
@@ -53,16 +66,32 @@ function randomApparition () {
             randomApparition ();
         }
 
-        if (score >= 20) {
+        else if (score >= 20 && score < 30) {
             difficulty = 3;
             respawnTime = timeDifficulty[difficulty -1];
+
+            clearInterval(intervApparition);
+            randomApparition ();
+        }
+
+        else if (score >= 30 && score < 40) {
+            difficulty = 4;
+            respawnTime = timeDifficulty[difficulty -1];
+
+            clearInterval(intervApparition);
+            randomApparition ();
+        }
+
+        else if (score >= 50) {
+            difficulty = 5;
+            respawnTime = timeDifficulty[difficulty -1];
+
             clearInterval(intervApparition);
             randomApparition ();
         }
         
         let index = randomParcelle ();
         
-
         // Taupe qui monde
         gsap.to(allParcellesImg[index], {
             y:0,
@@ -80,9 +109,9 @@ function randomApparition () {
                 if (parcelle.childNodes[1].getAttribute("data-visible") === "true") {
 
                     // On récupère la parcelle en question pour faire rentrer la taupe en question
-                    let index = allParcelles.indexOf(parcelle);
+                    let indexParcelle = allParcelles.indexOf(parcelle);
                     
-                    gsap.to(allParcellesImg[index], {
+                    gsap.to(allParcellesImg[indexParcelle], {
                         y:150,
                         duration: 0.2
                     })
@@ -91,6 +120,7 @@ function randomApparition () {
                     affScore.innerText = `Score : ${score}`;
 
                     parcelle.childNodes[1].setAttribute("data-visible", "false");
+                    return;
                 }
 
                 // Sinon on fait rien
@@ -100,34 +130,11 @@ function randomApparition () {
             })
         })
 
-        // Si une taupe n'est pas touchée (donc au bout de 2s)
-        timeoutKill = setTimeout(() => {
-
-            
-            if (allParcellesImg[index].getAttribute("data-visible") === "true" && isPlaying) {
-                
-                gsap.to(allParcellesImg[index], {
-                    y:150,
-                    duration: 0.2
-                })
-
-                score--;
-                affScore.innerText = `Score : ${score}`;
-                animPointEnMoins.seek(0);
-                animPointEnMoins.play();
-
-                allParcellesImg[index].setAttribute("data-visible", "false");
-            }
-
-        }, 2000);
-
     }, respawnTime);
 
 }
 
-
-// Boutout reset
-resetBtn.addEventListener("click", () => {
+function endGame () {
 
     isPlaying = false;
     clearTimeout(timeoutKill);
@@ -151,8 +158,33 @@ resetBtn.addEventListener("click", () => {
             duration: 0.1
         })
     });
-})
 
+    // Message perdu
+    para.innerText = `C'est perdu pour cette fois, appuyez sur 'Play' pour rejouer!`
+}
+
+function init () {
+    isPlaying = true;
+    isLoose = false;
+
+    para.innerHTML = `Tapez sur les taupes qui apparaissent avec votre souris ! <br> Bon courage! `;
+
+    allParcelles.forEach((parcelle, index) => {
+
+        gsap.to(allParcellesImg[index], {
+            y:150,
+            duration: 0.1
+        })
+
+        allParcellesImg[index].setAttribute("data-visible", "false");
+    });
+}
+
+
+// Boutout reset
+resetBtn.addEventListener("click", () => {
+    endGame();
+});
 
 // Bouton play
 playBtn.addEventListener("click", () => {
@@ -160,7 +192,7 @@ playBtn.addEventListener("click", () => {
     if (isPlaying) {
         return;
     } else {
-        isPlaying = true;
+        init ();
         randomApparition();
     }
-})
+});
