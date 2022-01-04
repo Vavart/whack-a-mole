@@ -1,2 +1,4 @@
-# Tape-Taupe
-Un mini-jeu tape-taupe conçu en HTML / CSS / JS
+# Le mini-jeu du Tape-Taupe!
+
+Vous connaissez le principe, tapez à l'aide de votre souris sur les taupes montrant leur tête! 
+--> Jeu disponible [ici](https://vavart.github.io/tape-taupe/) !
